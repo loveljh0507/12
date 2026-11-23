@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="ko"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#ff7eb6"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="내 다이어리"><meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="manifest" href="manifest.json"><link rel="apple-touch-icon" href="icon-192.png">
+<title>내 다이어리</title>
+<link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Do+Hyeon&family=Dongle&family=Gaegu&family=Gamja+Flower&family=Gugi&family=Hi+Melody&family=Jua&family=Nanum+Pen+Script&family=Single+Day&display=swap" rel="stylesheet">
+<style>
+:root{--c:#ff7eb6;--l:#fff0f7;--m:#ffd3e6;--d:#d6397f;--f:'Gaegu';--fs:1.1}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;background:var(--l);color:#4a3a40;font-family:var(--f),'Malgun Gothic','Apple SD Gothic Neo',sans-serif;font-size:calc(20px*var(--fs));padding-bottom:100px;user-select:none;-webkit-user-select:none}
+#ed,input,textarea{user-select:text;-webkit-user-select:text}
+header{background:var(--c);color:#fff;padding:12px;text-align:center;font-size:1.3em;font-weight:bold;position:sticky;top:0;z-index:5}
+.pg{display:none;padding:12px}.pg.on{display:block}
+.card{background:#fff;border-radius:20px;padding:14px;margin:0 0 14px;box-shadow:0 2px 8px #0001}
+h3{margin:0 0 8px;color:var(--d)}
+button,.bt{font:inherit;border:0;border-radius:16px;background:var(--c);color:#fff;padding:10px 14px;min-height:48px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:6px}
+.gray{background:#aaa}.big{width:100%;font-size:1.2em;min-height:56px}
+.in,select,#ed{font:inherit;width:100%;border:2px solid var(--m);border-radius:14px;padding:10px;background:#fff;color:#333;margin:4px 0}
+select{width:auto;padding:6px}
+#ed{min-height:180px;line-height:1.5;outline:0}#ed:empty:before{content:attr(data-ph);color:#bbb}
+.st{width:1.7em;height:1.7em;vertical-align:middle}
+nav{position:fixed;left:0;right:0;bottom:0;display:flex;background:#fff;border-top:2px solid var(--m);z-index:20;padding-bottom:env(safe-area-inset-bottom)}
+nav button{flex:1;background:none;color:#999;border-radius:0;flex-direction:column;gap:0;min-height:64px;font-size:.85em}
+nav button b{font-size:1.7em;font-weight:normal;line-height:1.1}nav button.on{color:var(--d);font-weight:bold}
+.g5{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.pk{background:#fff;color:#555;border:2px solid var(--m);border-radius:16px;padding:4px;flex-direction:column;gap:0}
+.pk.on{border-color:var(--c);background:var(--l)}.pk small{font-size:.7em}.pk .e{font-size:1.9em;line-height:1.2}
+.pk.one{flex-direction:row;width:100%;justify-content:flex-start;gap:12px;padding:6px 12px}.pk i{margin-left:auto;font-style:normal;color:var(--d);font-size:.8em}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.th{position:relative;width:96px;height:96px;border-radius:14px;overflow:hidden;background:var(--m);display:flex;align-items:center;justify-content:center;flex-direction:column}
+.th img{width:100%;height:100%;object-fit:cover}.th.add{cursor:pointer;color:var(--d);font-size:1.6em}.th.add small{font-size:.5em}
+.x{position:absolute;top:2px;right:2px;width:30px;height:30px;min-height:0;padding:0;border-radius:50%;background:#000a;font-size:.8em}
+.cal{display:grid;grid-template-columns:repeat(7,1fr);gap:2px}
+.wd{background:var(--m);text-align:center;padding:6px 0;border-radius:8px;font-weight:bold}
+.dc{background:#fff;border-radius:10px;min-height:78px;padding:2px 0;text-align:center;font-size:.85em;overflow:hidden;line-height:1.15}
+.dc.sel{outline:3px solid var(--c)}.dc.today b{background:var(--c);color:#fff;border-radius:50%;padding:0 6px}
+.red{color:#e8262e}.hn{display:block;font-size:.62em;font-style:normal;word-break:keep-all}
+.empty{color:#999;text-align:center;padding:14px}.ent .tt{font-weight:bold;font-size:1.15em}.ent .bd{margin:8px 0;line-height:1.5;word-break:break-all}
+.ent .ph{width:31%;aspect-ratio:1;object-fit:cover;border-radius:10px;margin:1%}
+.sr{padding:8px;border-bottom:1px dashed var(--m);cursor:pointer}
+.mg{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}.mg div{position:relative}.mg img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:12px}
+.mg span{position:absolute;left:4px;bottom:4px;background:#000a;color:#fff;border-radius:8px;padding:0 6px;font-size:.7em}
+#md{position:fixed;inset:0;background:#000b;display:none;z-index:60;align-items:center;justify-content:center;flex-direction:column;gap:10px;padding:12px}
+#md img{max-width:100%;max-height:70vh;border-radius:12px}
+#sk{position:fixed;left:0;right:0;bottom:0;height:55vh;background:#fff;border-radius:22px 22px 0 0;z-index:40;display:none;flex-direction:column;box-shadow:0 -4px 14px #0003;padding:8px}
+#skt{display:flex;gap:6px;overflow-x:auto;padding-bottom:6px;flex:none}#skt button{flex:none;background:var(--m);color:#555;padding:6px 12px;min-height:44px}#skt button.on{background:var(--c);color:#fff}
+#skg{overflow-y:auto;display:grid;grid-template-columns:repeat(6,1fr);gap:4px;flex:1;align-content:start}
+#skg button{background:none;color:#000;font-size:1.7em;padding:2px;min-height:50px}#skg img{width:100%}
+#toast{position:fixed;top:60px;left:12px;right:12px;background:#333e;color:#fff;border-radius:16px;padding:14px;z-index:200;display:none;text-align:center}
+#lock{position:fixed;inset:0;background:var(--l);z-index:100;display:none;flex-direction:column;align-items:center;justify-content:center;gap:14px}
+#lock h1{margin:0;color:var(--d)}.dots{display:flex;gap:16px}.dots span{width:22px;height:22px;border-radius:50%;border:3px solid var(--c)}.dots span.f{background:var(--c)}
+.kp{display:grid;grid-template-columns:repeat(3,78px);gap:14px}.kp button{width:78px;height:78px;border-radius:50%;font-size:1.7em;background:#fff;color:var(--d);border:3px solid var(--m);padding:0}
+.sh{animation:sh .3s}@keyframes sh{25%{transform:translateX(-12px)}75%{transform:translateX(12px)}}
+details{background:#fff;border-radius:20px;margin-bottom:12px;box-shadow:0 2px 8px #0001}summary{padding:14px;font-weight:bold;color:var(--d);font-size:1.15em;cursor:pointer;min-height:52px}details>div{padding:0 14px 14px}
+.cc{width:52px;height:52px;border-radius:50%;border:4px solid #fff;box-shadow:0 0 0 2px #ccc;padding:0}.cc.on{box-shadow:0 0 0 4px #555}
+#cv{width:100%;max-width:300px;aspect-ratio:1;border:2px solid var(--m);border-radius:14px;touch-action:none;background:repeating-conic-gradient(#f3f3f3 0 25%,#fff 0 50%) 0 0/20px 20px}
+.sl{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}.sl .th{width:72px;height:72px;background:#fafafa;border:2px solid var(--m)}.sl .th img{object-fit:contain}
+label{display:block;margin-top:8px;font-weight:bold}
+</style></head><body>
+<div id="toast" onclick="this.style.display='none'"></div>
+<div id="lock"><h1 id="lt"></h1><div>비밀번호 숫자 4개를 눌러 주세요</div><div class="dots" id="ld"></div><div id="lh" style="color:var(--d);min-height:1.4em;text-align:center;padding:0 20px"></div>
+<div class="kp" id="kp"></div></div>
+<div id="md" onclick="if(event.target==this)cm()"></div>
+<div id="sk"><div id="skt"></div><div id="skg"></div><button class="gray" onclick="$('#sk').style.display='none'" style="margin-top:6px">닫기</button></div>
+<header id="hn">내 다이어리</header>
+
+<section class="pg on" id="p0"></section>
+<section class="pg" id="p1">
+ <div class="card"><input class="in" id="q" placeholder="🔍 단어로 일기 찾기" oninput="srch()"><div id="sres"></div></div>
+ <div class="card"><div class="row" style="justify-content:space-between"><button onclick="mv(-1)">◀</button><b id="cmt" style="font-size:1.3em"></b><button onclick="mv(1)">▶</button></div>
+ <div class="cal" id="cal" style="margin-top:8px"></div></div>
+ <div class="card" id="dv"></div>
+</section>
+<section class="pg" id="p2"><div id="mem"></div></section>
+<section class="pg" id="p3"></section>
+<nav><button class="on" onclick="go(0)"><b>📝</b>일정</button><button onclick="go(1)"><b>📅</b>달력</button><button onclick="go(2)"><b>📷</b>추억</button><button onclick="go(3)"><b>🎨</b>꾸미기</button></nav>
+
+<script>
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const p2=n=>String(n).padStart(2,'0'),key=d=>d.getFullYear()+'-'+p2(d.getMonth()+1)+'-'+p2(d.getDate()),tk=()=>key(new Date());
+const DOW=['일','월','화','수','목','금','토'];
+const DEF=()=>({name:'내 다이어리',theme:0,font:'Gaegu',animal:0,pin:'',hint:'',tl:'오늘의 감사 한 줄',entries:{},stickers:[],recent:[]});
+let D=DEF(),idb,E={},cur,auto=1,lastR=null,tab=0;
+const TH=[['분홍','#ff7eb6','#fff0f7','#ffd3e6','#d6397f'],['하늘','#4fb3f6','#eef8ff','#cde9ff','#1f78c1'],['연두','#6fcf5a','#f1fbec','#d3f0c6','#3a8a26'],['노랑','#f7c61a','#fffbe6','#ffefa8','#a67c00'],['보라','#a77bf0','#f6f0ff','#e2d3ff','#6a3fc4']];
+const FA=['Gaegu','Gamja Flower','Hi Melody','Nanum Pen Script','Single Day'],FB=['Black Han Sans','Do Hyeon','Jua','Gugi','Dongle'];
+const FS={'Gaegu':1.1,'Gamja Flower':1.05,'Hi Melody':1.1,'Nanum Pen Script':1.3,'Single Day':1,'Black Han Sans':.95,'Do Hyeon':1,'Jua':1,'Gugi':.95,'Dongle':1.4};
+const MN=['최고예요','신나요','행복해요','좋아요','보통이에요','졸려요','심심해요','슬퍼요','화나요','아파요'],AN=['고양이','강아지','병아리'];
+const W=[['☀️','맑음'],['🌤️','구름조금'],['⛅','구름많음'],['☁️','흐림'],['🌧️','비'],['🌦️','소나기'],['⛈️','천둥'],['❄️','눈'],['🌈','무지개'],['🌫️','안개'],['💨','바람'],['🌙','맑은 밤']];
+
+/* ---------- 저장 ---------- */
+const idbOpen=()=>new Promise((ok,no)=>{try{const r=indexedDB.open('mydiary',1);r.onupgradeneeded=()=>r.result.createObjectStore('kv');r.onsuccess=()=>ok(r.result);r.onerror=()=>no(r.error)}catch(e){no(e)}});
+const idbGet=k=>new Promise((ok,no)=>{const r=idb.transaction('kv').objectStore('kv').get(k);r.onsuccess=()=>ok(r.result);r.onerror=()=>no(r.error)});
+const idbPut=(k,v)=>new Promise((ok,no)=>{const t=idb.transaction('kv','readwrite');t.objectStore('kv').put(v,k);t.oncomplete=ok;t.onerror=t.onabort=()=>no(t.error)});
+async function save(){try{if(!idb)throw 0;await idbPut('d',D);return true}catch(e){toast('저장이 안 됐어요 😢 휴대폰 저장 공간이 부족하거나 저장이 막혀 있어요. 꾸미기 탭에서 백업을 해 두세요.');return false}}
+let tt;function toast(m){const t=$('#toast');t.textContent=m;t.style.display='block';clearTimeout(tt);tt=setTimeout(()=>t.style.display='none',4500)}
+function shrink(f,max,type){return new Promise((ok,no)=>{const u=URL.createObjectURL(f),i=new Image();i.onload=()=>{const r=Math.min(1,max/Math.max(i.width,i.height)),c=document.createElement('canvas');c.width=Math.max(1,Math.round(i.width*r));c.height=Math.max(1,Math.round(i.height*r));c.getContext('2d').drawImage(i,0,0,c.width,c.height);URL.revokeObjectURL(u);ok(c.toDataURL(type,.82))};i.onerror=()=>no('이 파일은 열 수 없어요 😢 사진 파일(JPG, PNG)인지 확인해 주세요. (아이폰 HEIC 사진은 안 될 수 있어요)');i.src=u})}
+function clean(h){const t=document.createElement('template');t.innerHTML=h;(function w(n){[...n.childNodes].forEach(c=>{if(c.nodeType==3)return;if(c.nodeType!=1){c.remove();return}const g=c.tagName;if(g=='IMG'){if(!/^data:image\//.test(c.getAttribute('src')||'')){c.remove();return}[...c.attributes].forEach(a=>{if(a.name!='src'&&a.name!='class')c.removeAttribute(a.name)});c.className='st';return}if(g=='BR')return;if(g=='DIV'||g=='P'){[...c.attributes].forEach(a=>c.removeAttribute(a.name));w(c);return}w(c);c.replaceWith(...c.childNodes)})})(t.content);const d=document.createElement('div');d.appendChild(t.content);return d.innerHTML}
+const txt=h=>{const t=document.createElement('template');t.innerHTML=clean(h);return t.content.textContent};
+
+/* ---------- 얼굴 그림 ---------- */
+function face(a,i,s=56){const bc=['#ffb86b','#c98f56','#ffe45c'][a],S='#4a3426',ln=`fill="none" stroke="${S}" stroke-width="4" stroke-linecap="round"`;
+let h=`<svg viewBox="0 0 100 100" width="${s}" height="${s}">`;
+if(a==0)h+=`<path d="M16 42L18 8L44 24Z M84 42L82 8L56 24Z" fill="${bc}" stroke="#a05a1a" stroke-width="3" stroke-linejoin="round"/>`;
+if(a==1)h+=`<ellipse cx="16" cy="48" rx="12" ry="22" fill="#8a5a2b" transform="rotate(12 16 48)"/><ellipse cx="84" cy="48" rx="12" ry="22" fill="#8a5a2b" transform="rotate(-12 84 48)"/>`;
+if(a==2)h+=`<path d="M50 20q-6-12-14-8M50 20q2-12 12-9" ${ln.replace(S,'#e0a800')}/>`;
+h+=`<circle cx="50" cy="56" r="38" fill="${bc}" stroke="#0002" stroke-width="2"/>`;
+const dots=`<circle cx="35" cy="50" r="5" fill="${S}"/><circle cx="65" cy="50" r="5" fill="${S}"/>`,arcs=`<path d="M28 52q7-10 14 0M58 52q7-10 14 0" ${ln}/>`,
+ch=`<circle cx="21" cy="64" r="6" fill="#ff8aa8" opacity=".7"/><circle cx="79" cy="64" r="6" fill="#ff8aa8" opacity=".7"/>`,
+op=`<path d="M36 68q14 22 28 0z" fill="#e8505b" stroke="${S}" stroke-width="3" stroke-linejoin="round"/>`,sm=`<path d="M38 70q12 12 24 0" ${ln}/>`,fl=`<path d="M42 74h16" ${ln}/>`,fr=`<path d="M38 78q12-12 24 0" ${ln}/>`;
+const X=[arcs+ch,`<circle cx="35" cy="49" r="8" fill="${S}"/><circle cx="65" cy="49" r="8" fill="${S}"/><circle cx="38" cy="46" r="3" fill="#fff"/><circle cx="68" cy="46" r="3" fill="#fff"/>`,arcs+ch,dots,dots,`<path d="M28 50h14M58 50h14" ${ln}/>`,dots,dots+`<ellipse cx="30" cy="64" rx="3.5" ry="6" fill="#6ec1ff"/>`,dots+`<path d="M26 38l18 8M74 38l-18 8" ${ln}/><circle cx="21" cy="64" r="6" fill="#ff5a5a" opacity=".5"/><circle cx="79" cy="64" r="6" fill="#ff5a5a" opacity=".5"/>`,`<path d="M29 44l12 12m0-12l-12 12M59 44l12 12m0-12l-12 12" ${ln}/>`][i];
+const M=[op,op.replace('M36 68q14 22 28 0z','M38 68q12 18 24 0z'),sm,sm,fl,`<circle cx="50" cy="76" r="5" fill="#e8505b"/>`,`<path d="M38 74q6-6 12 0t12 0" ${ln}/>`,fr,fr,`<path d="M38 76q6-6 12 0t12 0" ${ln}/>`][i];
+h+=X;
+h+=a==0?`<path d="M46 58h8l-4 5z" fill="#ff7a9a"/><path d="M8 54h12M8 62l12-3M92 54H80M92 62l-12-3" stroke="#a05a1a" stroke-width="2" stroke-linecap="round"/>`:a==1?`<ellipse cx="50" cy="61" rx="7" ry="5" fill="#333"/>`:`<path d="M42 59h16l-8 9z" fill="#ff9a2e"/>`;
+h+=M;if(i==5)h+=`<text x="70" y="30" font-size="20" fill="#6a5acd" font-weight="bold">z</text>`;if(i==9)h+=`<rect x="34" y="22" width="32" height="10" rx="4" fill="#fff" stroke="#e8a" stroke-width="2" transform="rotate(-10 50 27)"/>`;
+return h+'</svg>'}
+
+/* ---------- 공휴일 ---------- */
+const HC={},uk=t=>new Date(t).toISOString().slice(0,10);
+function lun(y){const f=new Intl.DateTimeFormat('en-u-ca-chinese',{timeZone:'UTC',month:'numeric',day:'numeric'}),r={};try{for(let t=Date.UTC(y,0,1,12);t<Date.UTC(y+1,0,1);t+=864e5){const p=f.formatToParts(t),m=p.find(x=>x.type=='month').value,d=+p.find(x=>x.type=='day').value;if(/bis/i.test(m))continue;const k=(+m)+'-'+d;r[k]=r[k]||t}}catch(e){}return r}
+function hol(y){if(HC[y])return HC[y];const h={},add=(t,n)=>{(h[uk(t)]=h[uk(t)]||[]).push(n)},dw=t=>new Date(t).getUTCDay(),need=[],D1=864e5;
+[[1,1,'신정'],[3,1,'삼일절',1],[5,5,'어린이날',1],[6,6,'현충일'],[8,15,'광복절',1],[10,3,'개천절',1],[10,9,'한글날',1],[12,25,'성탄절',1]].forEach(([m,d,n,s])=>{const t=Date.UTC(y,m-1,d,12);add(t,n);if(s)need.push([t,1])});
+const L=lun(y);
+if(L['4-8']){add(L['4-8'],'부처님오신날');need.push([L['4-8'],1])}
+[['1-1','설날'],['8-15','추석']].forEach(([k,n])=>{const t=L[k];if(!t)return;const b=[t-D1,t,t+D1];b.forEach((x,i)=>add(x,i==1?n:n+' 연휴'));if(b.some(x=>dw(x)==0))need.push([b[2],2])});
+need.sort((a,b)=>a[0]-b[0]);const done={};
+need.forEach(([t,ty])=>{let sub=ty==2;if(ty==1){const w=dw(t);sub=(w==0||w==6||h[uk(t)].length>1)&&!done[uk(t)];done[uk(t)]=1}if(!sub)return;let d=t+D1;while(dw(d)==0||dw(d)==6||h[uk(d)])d+=D1;add(d,'대체공휴일')});
+return HC[y]=h}
+const hname=(y,m,d)=>((hol(y)[y+'-'+p2(m)+'-'+p2(d)])||[]).join('·');
+
+/* ---------- 잠금 ---------- */
+let ent='',fails=0;const hp=s=>{let x=5381;for(const c of 'dia'+s)x=((x*33)^c.charCodeAt(0))>>>0;return String(x)};
+$('#kp').innerHTML=[1,2,3,4,5,6,7,8,9].map(n=>`<button onclick="kk('${n}')">${n}</button>`).join('')+`<span></span><button onclick="kk('0')">0</button><button onclick="kk('')" style="font-size:1.2em">⌫</button>`;
+function ld(){$('#ld').innerHTML=[0,1,2,3].map(i=>`<span class="${i<ent.length?'f':''}"></span>`).join('')}
+function showLock(){if(!D.pin){$('#lock').style.display='none';return}ent='';ld();$('#lt').textContent='🔒 '+D.name;$('#lock').style.display='flex'}
+function kk(n){if(n==='')ent=ent.slice(0,-1);else if(ent.length<4)ent+=n;ld();if(ent.length==4)setTimeout(()=>{if(hp(ent)==D.pin){$('#lock').style.display='none';$('#lh').textContent='';fails=0;if(auto&&cur!=tk())loadToday(tk())}else{fails++;ent='';ld();const d=$('#ld');d.classList.remove('sh');void d.offsetWidth;d.classList.add('sh');toast(fails<3?`비밀번호가 달라요. 다시 눌러 볼까요? (${fails}번 틀렸어요)`:'3번 틀렸어요. 힌트를 보여 줄게요!');if(fails>=3)$('#lh').textContent='💡 힌트: '+(D.hint||'(힌트를 안 적어 뒀어요)')}},150)}
+let hid=0;document.addEventListener('visibilitychange',()=>{if(document.hidden)hid=Date.now();else if(D.pin&&hid&&Date.now()-hid>60000)showLock()});
+
+/* ---------- 테마 ---------- */
+function applyTheme(){const t=TH[D.theme],s=document.documentElement.style;['c','l','m','d'].forEach((k,i)=>s.setProperty('--'+k,t[i+1]));s.setProperty('--f',`'${D.font}'`);s.setProperty('--fs',FS[D.font]||1);$('meta[name=theme-color]').content=t[1];$('#hn').textContent=D.name;document.title=D.name}
+
+/* ---------- 탭 ---------- */
+function go(i){tab=i;$$('.pg').forEach((p,j)=>p.classList.toggle('on',i==j));$$('nav button').forEach((b,j)=>b.classList.toggle('on',i==j));if(i==1)rCal();if(i==2)rMem();scrollTo(0,0)}
+
+/* ---------- 일정(오늘) ---------- */
+function loadToday(k){cur=k;auto=k==tk();const e=D.entries[k],[y,m,d]=k.split('-').map(Number);
+E={m:e?e.m:null,an:e?e.an??D.animal:D.animal,w:e?e.w:null,p:e?[...(e.p||[])]:[]};
+$('#p0').innerHTML=`<div class="card" style="text-align:center"><div style="color:#999">${y}년</div><div style="font-size:1.8em;font-weight:bold;color:var(--d)">${m}월 ${d}일 ${DOW[new Date(y,m-1,d).getDay()]}요일</div>${auto?'':`<div>✏️ 지난 일기를 보고 있어요 <button onclick="loadToday(tk())">오늘로 가기</button></div>`}</div>
+<div class="card"><div class="row"><h3 style="margin:0">오늘 기분</h3><select id="ans" onchange="E.an=+this.value;D.animal=E.an;save();rMood()">${AN.map((n,i)=>`<option value="${i}" ${i==E.an?'selected':''}>${n}</option>`).join('')}</select></div><div id="moodBox" style="margin-top:8px"></div></div>
+<div class="card"><h3>오늘 날씨</h3><div id="wxBox"></div></div>
+<div class="card"><h3>오늘의 제목</h3><input class="in" id="ttl" maxlength="40" placeholder="한 줄 제목" value="${esc(e?e.title||'':'')}">
+<h3 style="margin-top:12px">일기</h3><div id="ed" contenteditable="true" data-ph="오늘 있었던 일을 써 보세요 ✏️"></div><button style="margin-top:8px" onclick="showStk()">😊 스티커 넣기</button></div>
+<div class="card"><h3 id="tlh">${esc(D.tl)}</h3><input class="in" id="thx" maxlength="60" placeholder="한 줄로 써 보세요" value="${esc(e?e.thanks||'':'')}"></div>
+<div class="card"><h3>사진 (하루 3장까지)</h3><div class="row" id="phBox"></div></div>
+<button class="big" onclick="saveEntry()">💾 저장하기</button>`;
+$('#ed').innerHTML=e?clean(e.html||''):'';rMood();rWx();rPh()}
+function rMood(){const b=$('#moodBox');b.innerHTML=E.m!=null&&!E.mo?`<button class="pk one" onclick="E.mo=1;rMood()">${face(E.an,E.m,56)}<b>${MN[E.m]}</b><i>▼ 바꾸기</i></button>`:'<div class="g5">'+MN.map((n,i)=>`<button class="pk${E.m==i?' on':''}" onclick="E.m=${i};E.mo=0;rMood()">${face(E.an,i,52)}<small>${n}</small></button>`).join('')+'</div>'}
+function rWx(){const b=$('#wxBox');b.innerHTML=E.w!=null&&!E.wo?`<button class="pk one" onclick="E.wo=1;rWx()"><span class="e" style="font-size:2.2em">${W[E.w][0]}</span><b>${W[E.w][1]}</b><i>▼ 바꾸기</i></button>`:'<div class="g4">'+W.map((w,i)=>`<button class="pk${E.w==i?' on':''}" onclick="E.w=${i};E.wo=0;rWx()"><span class="e">${w[0]}</span><small>${w[1]}</small></button>`).join('')+'</div>'}
+function rPh(){$('#phBox').innerHTML=E.p.map((s,i)=>`<div class="th"><img src="${s}" onclick="zoom(E.p[${i}])"><button class="x" onclick="E.p.splice(${i},1);rPh()">✕</button></div>`).join('')+(E.p.length<3?`<label class="th add" style="margin:0">📷<small>사진 넣기</small><input type="file" accept="image/*" multiple hidden onchange="addPh(this)"></label>`:'')+`<span>${E.p.length}/3장</span>`}
+async function addPh(inp){const fs=[...inp.files];inp.value='';for(const f of fs){if(E.p.length>=3){toast('사진은 하루에 3장까지만 넣을 수 있어요 📷');break}if(!f.type.startsWith('image/')){toast('사진 파일이 아니에요 😢 JPG나 PNG 사진을 골라 주세요.');continue}try{E.p.push(await shrink(f,600,'image/jpeg'));rPh()}catch(e){toast(e)}}}
+async function saveEntry(){if(E.m==null){toast('오늘 기분을 먼저 골라 주세요 🙂');$('#moodBox').scrollIntoView({behavior:'smooth',block:'center'});return}
+D.entries[cur]={m:E.m,an:E.an,w:E.w,title:$('#ttl').value.trim(),html:clean($('#ed').innerHTML),thanks:$('#thx').value.trim(),p:[...E.p]};if(await save())toast('저장했어요! 💖')}
+document.addEventListener('selectionchange',()=>{const s=getSelection(),ed=$('#ed');if(ed&&s.rangeCount&&ed.contains(s.anchorNode))lastR=s.getRangeAt(0).cloneRange()});
+
+/* ---------- 스티커 ---------- */
+const ER=/\p{Emoji_Presentation}/u,rng=(a,b)=>{const s=[];for(let i=a;i<=b;i++){const c=String.fromCodePoint(i);if(ER.test(c))s.push(c)}return s};
+const SC={'😀 얼굴':()=>[...rng(0x1F600,0x1F64F),...rng(0x1F910,0x1F92F),...rng(0x1F970,0x1F97A),'☺️','🥹'],
+'🙂 기분':()=>['😆','🤩','🥰','😊','🙂','😐','😴','🥱','😢','😭','😡','🤒','🤗','😎','🤔','😳','😱','🥳','😇','🤭'],
+'☀️ 날씨':()=>['☀️','🌤️','⛅','🌥️','☁️','🌦️','🌧️','⛈️','🌩️','🌨️','❄️','☃️','⛄','🌈','🌫️','💨','🌪️','🌙','⭐','🌟','✨','⚡','🔥','💧','🌊',...rng(0x1F311,0x1F320)],
+'🍎 음식':()=>[...rng(0x1F345,0x1F37F),...rng(0x1F950,0x1F96F),...rng(0x1F32D,0x1F32F),...rng(0x1F9C0,0x1F9CB),'☕','🍵'],
+'🐶 동물':()=>[...rng(0x1F400,0x1F43E),...rng(0x1F980,0x1F9AE),...rng(0x1F990,0x1F9A2)],
+'🌸 식물':()=>[...rng(0x1F330,0x1F344),'🌷','🌹','🌺','🌻','🌼','💐','🍀'],
+'🧸 물건':()=>[...rng(0x1F451,0x1F465),...rng(0x1F4A1,0x1F4FC),...rng(0x1F50A,0x1F52E),...rng(0x1F9E3,0x1F9FF),'✏️','✂️','⌚','☎️','📷'],
+'⚽ 놀이':()=>[...rng(0x1F380,0x1F3CA),...rng(0x1F3CF,0x1F3D3),...rng(0x1F93A,0x1F94F),'⚽','⚾','🎮'],
+'🚗 장소':()=>[...rng(0x1F680,0x1F6C5),...rng(0x1F3E0,0x1F3F0),...rng(0x1F5FB,0x1F5FF),...rng(0x1F30D,0x1F310)],
+'👋 사람':()=>[...rng(0x1F440,0x1F487),...rng(0x1F9D1,0x1F9DF),'☝️','✌️','✍️'],
+'💖 하트':()=>['❤️','🧡','💛','💚','💙','💜','🖤','🤍','🤎','❣️','💕','💞','💓','💗','💖','💘','💝','💯','❗','❓','✅','❌','⭕','⭐',...rng(0x1F493,0x1F4A2),...rng(0x1F500,0x1F53D),...rng(0x1F7E0,0x1F7EB)]};
+let sCat='🕘 최근',sList=[];
+function showStk(){$('#sk').style.display='flex';rSk()}
+function rSk(){const cats=['🕘 최근','⭐ 내스티커',...Object.keys(SC)];$('#skt').innerHTML=cats.map(c=>`<button class="${c==sCat?'on':''}" onclick="sCat='${c}';rSk()">${c}</button>`).join('');
+let l;if(sCat=='🕘 최근')l=D.recent.filter(t=>!t.startsWith('c:')||D.stickers.some(s=>'c:'+s.id==t));else if(sCat=='⭐ 내스티커')l=D.stickers.map(s=>'c:'+s.id);else l=SC[sCat]();sList=l;
+$('#skg').innerHTML=l.length?l.map((t,i)=>`<button onclick="insSt(${i})">${t.startsWith('c:')?`<img src="${D.stickers.find(s=>'c:'+s.id==t).src}">`:t}</button>`).join(''):`<div class="empty" style="grid-column:1/-1">${sCat=='⭐ 내스티커'?'꾸미기 탭에서 내 스티커를 만들어 보세요 🎨':'아직 쓴 스티커가 없어요'}</div>`}
+function insSt(i){const t=sList[i],ed=$('#ed');let r=lastR&&ed.contains(lastR.startContainer)?lastR:null;if(!r){r=document.createRange();r.selectNodeContents(ed);r.collapse(false)}r.deleteContents();let n;if(t.startsWith('c:')){n=document.createElement('img');n.className='st';n.src=D.stickers.find(s=>'c:'+s.id==t).src}else n=document.createTextNode(t);r.insertNode(n);r.setStartAfter(n);r.collapse(true);lastR=r;
+D.recent=[t,...D.recent.filter(x=>x!=t)].slice(0,30);save()}
+
+/* ---------- 보기 ---------- */
+function entryHTML(k){const e=D.entries[k];if(!e)return '<div class="empty">이날은 쓴 일기가 없어요.</div>';return `<div class="ent"><div class="row">${e.m!=null?face(e.an??D.animal,e.m,48):''}${e.w!=null?`<span style="font-size:2em">${W[e.w][0]}</span>`:''}</div>${e.title?`<div class="tt">${esc(e.title)}</div>`:''}<div class="bd">${clean(e.html||'')}</div>${e.thanks?`<div>💗 ${esc(D.tl.replace(/^오늘의 /,''))}: ${esc(e.thanks)}</div>`:''}<div>${(e.p||[]).map(s=>`<img class="ph" src="${s}" onclick="zoom(this.src)">`).join('')}</div></div>`}
+function zoom(src,date){const m=$('#md');m.innerHTML=`<img src="${src}">${date?`<button onclick="cm();editView('${date}')">📖 이날 일기 보기</button>`:''}<button class="gray" onclick="cm()">닫기</button>`;m.style.display='flex'}
+function cm(){$('#md').style.display='none'}
+function editView(k){const [y,m]=k.split('-').map(Number);cy=y;cm_=m-1;sel=k;go(1);setTimeout(()=>$('#dv').scrollIntoView({behavior:'smooth'}),50)}
+function editDate(k){go(0);loadToday(k)}
+
+/* ---------- 달력 ---------- */
+let cy=new Date().getFullYear(),cm_=new Date().getMonth(),sel=tk();
+function mv(n){cm_+=n;if(cm_<0){cm_=11;cy--}if(cm_>11){cm_=0;cy++}rCal()}
+function rCal(){$('#cmt').textContent=`${cy}년 ${cm_+1}월`;const f=new Date(cy,cm_,1).getDay(),n=new Date(cy,cm_+1,0).getDate(),t=tk();
+let h=DOW.map((d,i)=>`<div class="wd ${i%6==0?'red':''}">${d}</div>`).join('')+'<div></div>'.repeat(f);
+for(let d=1;d<=n;d++){const k=cy+'-'+p2(cm_+1)+'-'+p2(d),w=(f+d-1)%7,hn=hname(cy,cm_+1,d),e=D.entries[k],bd=cm_==11&&d==5;
+h+=`<div class="dc ${k==sel?'sel':''} ${k==t?'today':''} ${w%6==0||hn?'red':''}" onclick="sel='${k}';rCal()"><b>${d}</b>${hn?`<i class="hn">${esc(hn)}</i>`:''}${bd?'<i class="hn" style="color:var(--d)">🎂내 생일</i>':''}${e&&e.m!=null?`<div>${face(e.an??D.animal,e.m,24)}</div>`:''}${e&&e.p&&e.p.length?'<div style="font-size:.8em">📷</div>':''}</div>`}
+$('#cal').innerHTML=h;const[y,m,d]=sel.split('-').map(Number),hn=hname(y,m,d);
+$('#dv').innerHTML=`<h3>${m}월 ${d}일 ${DOW[new Date(y,m-1,d).getDay()]}요일 ${hn?`<span class="red">${esc(hn)}</span>`:''}${m==12&&d==5?' 🎂내 생일':''}</h3>${entryHTML(sel)}<button class="big" style="margin-top:8px" onclick="editDate('${sel}')">${D.entries[sel]?'✏️ 수정하기':'📝 이날 일기 쓰기'}</button>`}
+function srch(){const q=$('#q').value.trim().toLowerCase(),b=$('#sres');if(!q){b.innerHTML='';return}
+const r=Object.keys(D.entries).sort().reverse().filter(k=>{const e=D.entries[k];return(e.title+' '+txt(e.html||'')+' '+(e.thanks||'')).toLowerCase().includes(q)}).slice(0,30);
+b.innerHTML=r.length?r.map(k=>{const e=D.entries[k];return`<div class="sr" onclick="sel='${k}';cy=+'${k.slice(0,4)}';cm_=${+k.slice(5,7)-1};rCal();$('#dv').scrollIntoView({behavior:'smooth'})"><b>${k}</b> ${esc(e.title||txt(e.html||'').slice(0,30))}</div>`}).join(''):'<div class="empty">찾은 일기가 없어요 🔍</div>'}
+
+/* ---------- 추억 ---------- */
+function rMem(){const g={};Object.keys(D.entries).sort().reverse().forEach(k=>(D.entries[k].p||[]).forEach((s,i)=>{(g[k.slice(0,7)]=g[k.slice(0,7)]||[]).push([k,s,i])}));const ms=Object.keys(g).sort().reverse();
+$('#mem').innerHTML=ms.length?ms.map(m=>`<div class="card"><h3>${m.slice(0,4)}년 ${+m.slice(5)}월</h3><div class="mg">${g[m].map(([k,s,i])=>`<div onclick="zoom(D.entries['${k}'].p[${i}],'${k}')"><img src="${s}"><span>${+k.slice(5,7)}/${+k.slice(8)}</span></div>`).join('')}</div></div>`).join(''):'<div class="card empty">아직 사진이 없어요 📷<br>일기에 사진을 넣으면 여기에 모여요!</div>'}
+
+/* ---------- 꾸미기 ---------- */
+let pen={c:'#333',w:8,e:0},strokes=[],redo=[],cur_s=null;
+const PAL=['#333','#ff4d6d','#ff9a2e','#ffd93b','#5cc85c','#3fa7ff','#9b6bff','#8b5a2b','#ffffff'];
+function buildDeco(){$('#p3').innerHTML=`
+<details open><summary>📲 휴대폰에 설치하기</summary><div id="inst"></div></details>
+<details><summary>🎨 테마 색</summary><div class="row" id="thB"></div></details>
+<details><summary>🔤 글꼴</summary><div><b>귀여운 손글씨</b><div class="g4" id="fA" style="grid-template-columns:1fr 1fr"></div><b style="display:block;margin-top:10px">씩씩하고 굵은 글씨</b><div class="g4" id="fB" style="grid-template-columns:1fr 1fr"></div></div></details>
+<details><summary>✏️ 이름 바꾸기</summary><div><label>다이어리 이름</label><input class="in" id="nm" maxlength="14"><label>감사 칸 이름 (예: 오늘의 칭찬 한 줄)</label><input class="in" id="tln" maxlength="16"><button class="big" onclick="saveNames()">저장</button></div></details>
+<details><summary>⭐ 내 스티커 만들기</summary><div><b>① 직접 그리기</b><div class="row" style="margin:8px 0" id="pal"></div>
+<div class="row"><button id="bp" onclick="pen.e=0;rPen()">✏️ 펜</button><button id="be" onclick="pen.e=1;rPen()">🧽 지우개</button><input type="range" min="3" max="30" value="8" oninput="pen.w=+this.value" style="flex:1;min-width:80px"></div>
+<canvas id="cv" width="300" height="300" style="margin-top:8px"></canvas>
+<div class="row" style="margin-top:6px"><button onclick="if(strokes.length){redo.push(strokes.pop());rDraw()}">↩️ 되돌리기</button><button onclick="if(redo.length){strokes.push(redo.pop());rDraw()}">↪️ 다시 실행</button><button class="gray" onclick="strokes=[];redo=[];rDraw()">🗑 모두 지우기</button></div>
+<button class="big" style="margin-top:8px" onclick="saveDraw()">💾 스티커로 저장</button>
+<b style="display:block;margin-top:14px">② 그림 파일 가져오기</b><label class="bt" style="margin-top:6px">🖼 그림 파일 고르기<input type="file" accept="image/*" hidden onchange="upSt(this)"></label>
+<b style="display:block;margin-top:14px">내 스티커 (✕를 누르면 지워요)</b><div class="sl" id="stl"></div></div></details>
+<details><summary>💾 백업 · 불러오기 · 초기화</summary><div><p>일기, 사진, 내 스티커가 모두 한 파일에 저장돼요.</p><button class="big" onclick="backup()">⬇️ 백업 저장하기</button><label class="bt big" style="margin-top:8px;background:#6fcf5a">⬆️ 백업 불러오기<input type="file" accept=".json,application/json" hidden onchange="restore(this)"></label><button class="big gray" style="margin-top:8px" onclick="resetAll()">🗑 모두 초기화</button></div></details>
+<details><summary>🔒 비밀번호</summary><div id="pwBox"></div></details>`;
+$('#thB').innerHTML=TH.map((t,i)=>`<button class="cc ${i==D.theme?'on':''}" style="background:${t[1]}" title="${t[0]}" onclick="D.theme=${i};save();applyTheme();buildDeco()"></button>`).join('')+`<span style="width:100%">지금 색: ${TH[D.theme][0]}</span>`;
+const fb=a=>a.map(f=>`<button class="pk ${f==D.font?'on':''}" style="font-family:'${f}';font-size:1.1em;min-height:52px" onclick="D.font='${f}';save();applyTheme();buildDeco()">${f==D.font?'✔ ':''}${f.replace(/ /g,'&nbsp;')}<br><small style="font-family:'${f}'">가나다 안녕</small></button>`).join('');
+$('#fA').innerHTML=fb(FA);$('#fB').innerHTML=fb(FB);$('#nm').value=D.name;$('#tln').value=D.tl;
+$('#pal').innerHTML=PAL.map(c=>`<button class="cc ${c==pen.c?'on':''}" style="background:${c}" onclick="pen.c='${c}';pen.e=0;rPen()"></button>`).join('')+`<input type="color" value="${pen.c}" onchange="pen.c=this.value;pen.e=0;rPen()" style="width:52px;height:52px;border:0;padding:0;background:none">`;
+rPen();rStl();rPw();initCv();rInst()}
+function rPen(){$$('#pal .cc').forEach((b,i)=>b.classList.toggle('on',PAL[i]==pen.c&&!pen.e));const a=$('#bp'),b=$('#be');if(a){a.style.background=pen.e?'#aaa':'var(--c)';b.style.background=pen.e?'var(--c)':'#aaa'}}
+function saveNames(){D.name=$('#nm').value.trim()||'내 다이어리';D.tl=$('#tln').value.trim()||'오늘의 감사 한 줄';save();applyTheme();const h=$('#tlh');if(h)h.textContent=D.tl;toast('바꿨어요 ✨')}
+function rStl(){$('#stl').innerHTML=D.stickers.length?D.stickers.map((s,i)=>`<div class="th"><img src="${s.src}"><button class="x" onclick="delSt(${i})">✕</button></div>`).join(''):'<span style="color:#999">아직 없어요</span>'}
+function delSt(i){if(!confirm('이 스티커를 지울까요?'))return;D.stickers.splice(i,1);save();rStl()}
+async function upSt(inp){const f=inp.files[0];inp.value='';if(!f)return;try{D.stickers.push({id:Date.now().toString(36),src:await shrink(f,160,'image/png')});if(await save())toast('내 스티커에 넣었어요 ⭐');rStl()}catch(e){toast(e)}}
+function initCv(){const cv=$('#cv'),x=cv.getContext('2d');rDraw();const pt=e=>{const r=cv.getBoundingClientRect();return[(e.clientX-r.left)*300/r.width,(e.clientY-r.top)*300/r.height]};
+cv.onpointerdown=e=>{cv.setPointerCapture(e.pointerId);cur_s={c:pen.c,w:pen.w,e:pen.e,p:[pt(e)]};redo=[];strokes.push(cur_s);rDraw();e.preventDefault()};
+cv.onpointermove=e=>{if(cur_s){cur_s.p.push(pt(e));rDraw()}};cv.onpointerup=cv.onpointercancel=()=>{cur_s=null}}
+function rDraw(){const cv=$('#cv');if(!cv)return;const x=cv.getContext('2d');x.clearRect(0,0,300,300);x.lineCap=x.lineJoin='round';strokes.forEach(s=>{x.globalCompositeOperation=s.e?'destination-out':'source-over';x.strokeStyle=x.fillStyle=s.c;x.lineWidth=s.w;x.beginPath();s.p.forEach(([a,b],i)=>i?x.lineTo(a,b):x.moveTo(a,b));if(s.p.length==1){x.arc(s.p[0][0],s.p[0][1],s.w/2,0,7);x.fill()}else x.stroke()});x.globalCompositeOperation='source-over'}
+async function saveDraw(){if(!strokes.some(s=>!s.e)){toast('먼저 그림을 그려 주세요 🎨');return}const c=document.createElement('canvas');c.width=c.height=160;c.getContext('2d').drawImage($('#cv'),0,0,160,160);D.stickers.push({id:Date.now().toString(36),src:c.toDataURL('image/png')});if(await save())toast('내 스티커에 넣었어요 ⭐ 일기의 [스티커 넣기]에서 쓸 수 있어요!');strokes=[];redo=[];rDraw();rStl()}
+function backup(){const d=new Date(),o={app:'mydiary',v:1,saved:d.toISOString(),data:{...D,pin:'',hint:''}},a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(o)],{type:'application/json'}));a.download=`다이어리_${p2(d.getFullYear()%100)}-${p2(d.getMonth()+1)}-${p2(d.getDate())}.json`;document.body.appendChild(a);a.click();a.remove();toast('백업 파일을 만들었어요 💾 (비밀번호는 안전하게 빼고 저장돼요)')}
+function restore(inp){const f=inp.files[0];inp.value='';if(!f)return;const r=new FileReader();r.onload=async()=>{let o;try{o=JSON.parse(r.result);if(o.app!='mydiary'||!o.data||typeof o.data.entries!='object')throw 0}catch(e){toast('이 파일은 다이어리 백업 파일이 아니에요 😢');return}
+if(!confirm('정말 불러올까요?\n지금 있는 일기는 백업 파일의 내용으로 바뀌어요.'))return;const{pin,hint}=D;D={...DEF(),...o.data,pin,hint};if(await save()){refresh();toast('불러왔어요 ✨')}};r.readAsText(f)}
+async function resetAll(){if(!confirm('정말 삭제할까요?\n일기, 사진, 내 스티커가 모두 지워져요.'))return;if(!confirm('한 번 더 물어볼게요.\n지우면 되돌릴 수 없어요. 정말 모두 삭제할까요?'))return;D=DEF();await save();refresh();showLock();toast('모두 초기화했어요')}
+function rPw(){$('#pwBox').innerHTML=(D.pin?'<p>🔒 비밀번호가 켜져 있어요.</p><label>지금 비밀번호</label><input class="in" id="pw0" type="password" inputmode="numeric" maxlength="4">':'<p>🔓 비밀번호가 꺼져 있어요.</p>')+`<label>${D.pin?'새':'만들'} 비밀번호 (숫자 4자리)</label><input class="in" id="pw1" type="password" inputmode="numeric" maxlength="4"><label>한 번 더 눌러 확인</label><input class="in" id="pw2" type="password" inputmode="numeric" maxlength="4"><label>비밀번호 힌트</label><input class="in" id="pwh" maxlength="40" placeholder="예: 우리 집 강아지 생일" value="${esc(D.hint)}"><button class="big" style="margin-top:8px" onclick="setPw()">${D.pin?'바꾸기':'비밀번호 만들기'}</button>${D.pin?'<button class="big gray" style="margin-top:8px" onclick="offPw()">비밀번호 끄기</button>':''}`}
+function setPw(){if(D.pin&&hp($('#pw0').value)!=D.pin){toast('지금 비밀번호가 맞지 않아요.');return}const a=$('#pw1').value,b=$('#pw2').value;if(D.pin&&!a&&!b){D.hint=$('#pwh').value.trim();save();toast('힌트를 저장했어요 💡');return}
+if(!/^\d{4}$/.test(a)){toast('비밀번호는 숫자 4자리로 만들어 주세요.');return}if(a!=b){toast('두 번 누른 비밀번호가 달라요. 다시 확인해 주세요.');return}D.pin=hp(a);D.hint=$('#pwh').value.trim();save();toast('비밀번호를 저장했어요 🔒');rPw()}
+function offPw(){if(hp($('#pw0').value)!=D.pin){toast('지금 비밀번호를 먼저 눌러 주세요.');return}if(!confirm('비밀번호를 끌까요?'))return;D.pin='';D.hint='';save();toast('비밀번호를 껐어요 🔓');rPw()}
+
+/* ---------- 설치(PWA) ---------- */
+let dip=null;const isSA=()=>matchMedia('(display-mode: standalone)').matches||navigator.standalone;
+window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();dip=e;rInst()});
+window.addEventListener('appinstalled',()=>{dip=null;rInst();toast('설치됐어요! 홈 화면에서 열어 보세요 🎉')});
+function rInst(){const b=$('#inst');if(!b)return;const ios=/iphone|ipad|ipod/i.test(navigator.userAgent);
+b.innerHTML=isSA()?'<p>✅ 이미 앱으로 쓰고 있어요!</p>':(dip?'<button class="big" onclick="doInst()">📲 지금 설치하기</button>':'')+(ios?'<p><b>아이폰/아이패드 (사파리)</b><br>① 아래쪽 공유 단추(□↑)를 눌러요<br>② [홈 화면에 추가]를 눌러요<br>③ [추가]를 누르면 끝!</p>':'<p><b>안드로이드 (크롬)</b><br>① 오른쪽 위 ⋮ 메뉴를 눌러요<br>② [앱 설치] 또는 [홈 화면에 추가]를 눌러요<br>③ [설치]를 누르면 끝!</p>')+'<p style="color:#999;font-size:.85em">꼭 https 주소(예: Netlify)로 열어야 설치돼요. 설치 뒤에는 인터넷이 없어도 열려요.</p>'}
+async function doInst(){if(!dip)return;dip.prompt();await dip.userChoice;dip=null;rInst()}
+
+/* ---------- 시작 ---------- */
+function refresh(){applyTheme();buildDeco();loadToday(tk());sel=tk();if(tab==1)rCal();if(tab==2)rMem()}
+(async()=>{try{idb=await idbOpen();const d=await idbGet('d');if(d)D={...DEF(),...d};try{navigator.storage&&navigator.storage.persist&&navigator.storage.persist()}catch(e){}}catch(e){toast('이 휴대폰에서는 저장 기능을 쓸 수 없어요 😢 사파리 개인정보 보호 모드라면 끄고 다시 열어 주세요.')}
+refresh();showLock();if('serviceWorker'in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{})})();
+</script></body></html>
